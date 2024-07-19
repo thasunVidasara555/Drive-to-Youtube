@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import http.client as httplib  # Update to use http.client
+import http.client as httplib
 import httplib2
 import os
 import random
@@ -18,7 +18,7 @@ from oauth2client.tools import run_flow
 httplib2.RETRIES = 1
 MAX_RETRIES = 10
 RETRIABLE_EXCEPTIONS = (
-    httplib2.HttpLib2Error, IOError, httplib.BadStatusLine,  # Use httplib.BadStatusLine instead
+    httplib2.HttpLib2Error, IOError, httplib.BadStatusLine,
     httplib.IncompleteRead, httplib.ImproperConnectionState,
     httplib.CannotSendRequest, httplib.CannotSendHeader,
     httplib.ResponseNotReady, httplib.NotConnected
@@ -127,6 +127,7 @@ if __name__ == '__main__':
     parser.add_argument("--keywords", help="Video keywords, comma separated", default="")
     parser.add_argument("--privacyStatus", choices=VALID_PRIVACY_STATUSES, default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
     parser.add_argument("--noauth_local_webserver", action='store_true', help="Do not run a local web server.")
+    parser.add_argument("--logging_level", default="INFO", help="Set the logging level.")
     args = parser.parse_args()
 
     if not os.path.exists(args.file):
