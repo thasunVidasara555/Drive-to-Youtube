@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import http.client as httplib  # updated import for Python 3
+import argparse
 import httplib2
 import os
 import random
@@ -12,7 +12,6 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
-from oauth2client.tools import argparser, run_flow
 
 httplib2.RETRIES = 1
 MAX_RETRIES = 10
@@ -118,14 +117,16 @@ def resumable_upload(insert_request):
 
 
 if __name__ == '__main__':
-    argparser.add_argument("--file", required=True, help="Video file to upload")
-    argparser.add_argument("--title", help="Video title", default="Test Title")
-    argparser.add_argument("--description", help="Video description", default="Test Description")
-    argparser.add_argument("--category", default="22", help="Numeric video category. See https://developers.google.com/youtube/v3/docs/videoCategories/list")
-    argparser.add_argument("--keywords", help="Video keywords, comma separated", default="")
-    argparser.add_argument("--privacyStatus", choices=VALID_PRIVACY_STATUSES, default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
-    argparser.add_argument("--noauth_local_webserver", action='store_true', help="Do not run a local web server.")
-    args = argparser.parse_args()
+    # Define your argument parser
+    parser = argparse.ArgumentParser(description='Upload a video to YouTube.')
+    parser.add_argument("--file", required=True, help="Video file to upload")
+    parser.add_argument("--title", help="Video title", default="Test Title")
+    parser.add_argument("--description", help="Video description", default="Test Description")
+    parser.add_argument("--category", default="22", help="Numeric video category. See https://developers.google.com/youtube/v3/docs/videoCategories/list")
+    parser.add_argument("--keywords", help="Video keywords, comma separated", default="")
+    parser.add_argument("--privacyStatus", choices=VALID_PRIVACY_STATUSES, default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
+    parser.add_argument("--noauth_local_webserver", action='store_true', help="Do not run a local web server.")
+    args = parser.parse_args()
 
     if not os.path.exists(args.file):
         exit("Please specify a valid file using the --file= parameter.")
