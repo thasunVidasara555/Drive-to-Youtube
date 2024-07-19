@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import http.client as httplib  # Update to use http.client
 import httplib2
 import os
 import random
@@ -12,14 +13,15 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
+from oauth2client.tools import run_flow
 
 httplib2.RETRIES = 1
 MAX_RETRIES = 10
 RETRIABLE_EXCEPTIONS = (
-    httplib2.HttpLib2Error, IOError, httplib.NotConnected,
+    httplib2.HttpLib2Error, IOError, httplib.BadStatusLine,  # Use httplib.BadStatusLine instead
     httplib.IncompleteRead, httplib.ImproperConnectionState,
     httplib.CannotSendRequest, httplib.CannotSendHeader,
-    httplib.ResponseNotReady, httplib.BadStatusLine
+    httplib.ResponseNotReady, httplib.NotConnected
 )
 RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 
@@ -117,7 +119,6 @@ def resumable_upload(insert_request):
 
 
 if __name__ == '__main__':
-    # Define your argument parser
     parser = argparse.ArgumentParser(description='Upload a video to YouTube.')
     parser.add_argument("--file", required=True, help="Video file to upload")
     parser.add_argument("--title", help="Video title", default="Test Title")
